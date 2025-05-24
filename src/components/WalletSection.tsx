@@ -1,36 +1,45 @@
 import React, { useState } from 'react';
 import { Button } from './ui/button';
-import { WalletManager } from '../blockchain/wallet';
+import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { mintPOAP } from '../blockchain/mint';
 import { toast } from './ui/use-toast';
 
 export function WalletSection() {
-  const [isConnecting, setIsConnecting] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
-  const walletManager = WalletManager.getInstance();
+  const { connect, disconnect, account, connected, wallet } = useWallet();
 
-  const handleConnect = async () => {
-    setIsConnecting(true);
+  const handleConnect = async (walletName: string) => {
     try {
-      await walletManager.connect();
+      if (wallet?.name === walletName && connected) {
+        toast({
+          title: 'Already Connected',
+          description: `Already connected to ${walletName}`,
+        });
+        return;
+      }
+
+      if (connected) {
+        await disconnect();
+      }
+
+      await connect(walletName);
       toast({
         title: 'Wallet Connected',
-        description: `Connected to ${walletManager.address}`,
+        description: `Connected to ${account?.address}`,
       });
     } catch (error) {
+      console.error('Connection error:', error);
       toast({
         title: 'Connection Failed',
         description: error instanceof Error ? error.message : 'Failed to connect wallet',
         variant: 'destructive',
       });
-    } finally {
-      setIsConnecting(false);
     }
   };
 
   const handleDisconnect = async () => {
     try {
-      await walletManager.disconnect();
+      await disconnect();
       toast({
         title: 'Wallet Disconnected',
         description: 'Successfully disconnected wallet',
@@ -71,10 +80,13 @@ export function WalletSection() {
     <div className="flex flex-col items-center gap-4 p-4 rounded-lg border">
       <h2 className="text-2xl font-bold">Wallet Connection</h2>
       
-      {walletManager.isConnected ? (
+      {connected && account ? (
         <>
           <p className="text-sm text-gray-500">
-            Connected: {walletManager.address}
+            Connected: {account.address}
+          </p>
+          <p className="text-sm text-gray-500">
+            Using: {wallet?.name}
           </p>
           <div className="flex gap-4">
             <Button
@@ -92,12 +104,22 @@ export function WalletSection() {
           </div>
         </>
       ) : (
-        <Button
-          onClick={handleConnect}
-          disabled={isConnecting}
-        >
-          {isConnecting ? 'Connecting...' : 'Connect Wallet'}
-        </Button>
+        <div className="flex flex-col gap-4 items-center">
+          <div className="flex gap-4">
+            <Button
+              variant="outline"
+              onClick={() => handleConnect('Martian')}
+            >
+              Martian Wallet
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => handleConnect('Petra')}
+            >
+              Petra Wallet
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   );

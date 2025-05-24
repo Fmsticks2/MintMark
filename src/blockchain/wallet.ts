@@ -1,14 +1,19 @@
+import { AptosWalletAdapter, NetworkName, WalletName } from '@aptos-labs/wallet-adapter-react';
 import { MartianWallet } from '@martianwallet/aptos-wallet-adapter';
+import { PetraWallet } from 'petra-plugin-wallet-adapter';
 import { NETWORK } from './config';
 
 export class WalletManager {
   private static instance: WalletManager;
-  private wallet: MartianWallet;
+  private martianWallet: MartianWallet;
+  private petraWallet: PetraWallet;
+  private activeWallet?: MartianWallet | PetraWallet;
   private _isConnected: boolean = false;
   private _address: string = '';
 
   private constructor() {
-    this.wallet = new MartianWallet();
+    this.martianWallet = new MartianWallet();
+    this.petraWallet = new PetraWallet();
   }
 
   public static getInstance(): WalletManager {
@@ -18,23 +23,38 @@ export class WalletManager {
     return WalletManager.instance;
   }
 
-  public async connect(): Promise<void> {
+  public async connect(walletName: 'petra' | 'martian' = 'martian'): Promise<void> {
     try {
-      await this.wallet.connect();
-      const account = await this.wallet.account();
+      this.activeWallet = walletName === 'petra' ? this.petraWallet : this.martianWallet;
+      
+      if (!this.activeWallet) {
+        throw new Error('No wallet selected');
+      }
+
+      await this.activeWallet.connect();
+      const account = await this.activeWallet.account();
+      if (!account) {
+        throw new Error('No account found after connection');
+      }
+
       this._address = account.address;
       this._isConnected = true;
     } catch (error) {
       console.error('Failed to connect wallet:', error);
+      this._isConnected = false;
+      this._address = '';
       throw error;
     }
   }
 
   public async disconnect(): Promise<void> {
     try {
-      await this.wallet.disconnect();
-      this._address = '';
-      this._isConnected = false;
+      if (this.activeWallet && this._isConnected) {
+        await this.activeWallet.disconnect();
+        this._address = '';
+        this._isConnected = false;
+        this.activeWallet = undefined;
+      }
     } catch (error) {
       console.error('Failed to disconnect wallet:', error);
       throw error;
@@ -49,7 +69,7 @@ export class WalletManager {
     return this._address;
   }
 
-  public getWallet(): MartianWallet {
-    return this.wallet;
+  public getWallet(): MartianWallet | PetraWallet | undefined {
+    return this.activeWallet;
   }
 }
