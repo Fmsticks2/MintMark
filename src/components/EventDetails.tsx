@@ -29,15 +29,15 @@ const EventDetails = () => {
             <div className="space-y-0">
               <EventDetailRow 
                 label="Event Name" 
-                value="Community Meetup" 
+                value="Aptos BuildSprint OAU 2025" 
               />
               <EventDetailRow 
                 label="Date" 
-                value="July 20, 2024" 
+                value="May 24, 2025" 
               />
               <EventDetailRow 
                 label="Description" 
-                value="Join us for an evening of networking and discussions on the future of decentralized technologies." 
+                value="Getting familair with Aptos blockchain as Builders and Developers" 
                 isDescription={true}
               />
             </div>

@@ -1,8 +1,46 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { WalletManager } from '@/blockchain/wallet';
+import { mintPOAP } from '@/blockchain/mint';
+import { toast } from '@/components/ui/use-toast';
 
 const HeroSection = () => {
+  const [isMinting, setIsMinting] = useState(false);
+  const walletManager = WalletManager.getInstance();
+
+  const handleMint = async () => {
+    if (!walletManager.isConnected) {
+      toast({
+        title: 'Wallet Not Connected',
+        description: 'Please connect your wallet first',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsMinting(true);
+    try {
+      const result = await mintPOAP();
+      if (result.success) {
+        toast({
+          title: 'POAP Minted!',
+          description: `Transaction hash: ${result.hash}`,
+        });
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      toast({
+        title: 'Minting Failed',
+        description: error instanceof Error ? error.message : 'Failed to mint POAP',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsMinting(false);
+    }
+  };
+
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-green-900 relative overflow-hidden">
       {/* Animated background elements */}
@@ -22,8 +60,10 @@ const HeroSection = () => {
         
         <Button 
           className="bg-green-500 hover:bg-green-600 text-white px-12 py-6 text-lg rounded-full transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-green-500/25"
+          onClick={handleMint}
+          disabled={isMinting || !walletManager.isConnected}
         >
-          Connect Wallet
+          {isMinting ? 'Minting...' : 'Mint POAP'}
         </Button>
       </div>
     </section>

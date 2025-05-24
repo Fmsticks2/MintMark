@@ -12,7 +12,7 @@ const Footer = () => {
           </div>
           
           <p className="text-gray-400 text-center">
-            © 2024 MintMark. All rights reserved.
+            © 2025 MintMark. All rights reserved.
           </p>
         </div>
       </div>
