@@ -6,12 +6,13 @@ import { Card, CardContent } from '@/components/ui/card';
 interface EventDetailRowProps {
   label: string;
   value: string;
+  isDescription?: boolean;
 }
 
-const EventDetailRow = ({ label, value }: EventDetailRowProps) => (
-  <div className="flex justify-between items-center py-4 border-b border-gray-700 last:border-b-0">
-    <span className="text-gray-400 font-medium">{label}</span>
-    <span className="text-white font-semibold">{value}</span>
+const EventDetailRow = ({ label, value, isDescription = false }: EventDetailRowProps) => (
+  <div className={`flex ${isDescription ? 'flex-col sm:flex-row sm:items-start' : 'justify-between items-center'} py-4 border-b border-gray-700 last:border-b-0`}>
+    <span className={`text-gray-400 font-medium ${isDescription ? 'mb-2 sm:mb-0 sm:w-1/3 sm:flex-shrink-0' : ''}`}>{label}</span>
+    <span className={`text-white font-semibold ${isDescription ? 'sm:w-2/3 text-left' : ''}`}>{value}</span>
   </div>
 );
 
@@ -37,6 +38,7 @@ const EventDetails = () => {
               <EventDetailRow 
                 label="Description" 
                 value="Join us for an evening of networking and discussions on the future of decentralized technologies." 
+                isDescription={true}
               />
             </div>
             
