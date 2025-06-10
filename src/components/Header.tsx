@@ -57,8 +57,20 @@ export const Header = () => {
             <Link to="/" className="text-gray-300 hover:text-white transition-colors">
               Home
             </Link>
-            <Link to="/about" className="text-gray-300 hover:text-white transition-colors">
-              About
+            <Link to="/dashboard" className="text-gray-300 hover:text-white transition-colors">
+              Dashboard
+            </Link>
+            <Link to="/template-builder" className="text-gray-300 hover:text-white transition-colors">
+              Templates
+            </Link>
+            <Link to="/recipient-management" className="text-gray-300 hover:text-white transition-colors">
+              Recipients
+            </Link>
+            <Link to="/analytics" className="text-gray-300 hover:text-white transition-colors">
+              Analytics
+            </Link>
+            <Link to="/explore-events" className="text-gray-300 hover:text-white transition-colors">
+              Explore Events
             </Link>
             <Button 
               className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105"

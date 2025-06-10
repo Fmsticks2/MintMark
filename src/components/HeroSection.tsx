@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { Award, FileText } from 'lucide-react';
 import { WalletManager } from '@/blockchain/wallet';
 import { mintPOAP } from '@/blockchain/mint';
 import { toast } from '@/components/ui/use-toast';
@@ -21,7 +23,15 @@ const HeroSection = () => {
 
     setIsMinting(true);
     try {
-      const result = await mintPOAP();
+      // Define POAP parameters
+      const poapParams = {
+        collectionAddr: "0x1", // Replace with actual collection address
+        tokenName: "TypeScript Design Forge POAP",
+        tokenDescription: "A commemorative POAP for participating in TypeScript Design Forge",
+        tokenUri: "https://example.com/poap-metadata.json" // Replace with actual metadata URI
+      };
+      
+      const result = await mintPOAP(poapParams);
       if (result.success) {
         toast({
           title: 'POAP Minted!',
@@ -50,21 +60,39 @@ const HeroSection = () => {
       </div>
       
       <div className="text-center z-10 px-6 max-w-4xl mx-auto">
-        <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-          Mint Your <span className="text-green-400">POAP NFT</span>
+        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+          Enterprise
+          <span className="text-green-400"> Blockchain</span>
+          <br />Certification Platform
         </h1>
         
-        <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto">
-          Proof you showed up. One click away.
+        <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+          Empower your organization with secure, verifiable digital certificates on the blockchain. Issue, manage, and verify professional certifications with enterprise-grade security.
         </p>
         
-        <Button 
-          className="bg-green-500 hover:bg-green-600 text-white px-12 py-6 text-lg rounded-full transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-green-500/25"
-          onClick={handleMint}
-          disabled={isMinting || !walletManager.isConnected}
-        >
-          {isMinting ? 'Minting...' : 'Mint POAP'}
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button 
+            size="lg" 
+            className="bg-green-600 hover:bg-green-700 text-white px-8 py-3"
+            asChild
+          >
+            <Link to="/dashboard">
+              <Award className="mr-2 h-4 w-4" />
+              Get Started
+            </Link>
+          </Button>
+          <Button 
+            size="lg" 
+            variant="outline" 
+            className="border-green-600 text-green-400 hover:bg-green-600 hover:text-white px-8 py-3"
+            asChild
+          >
+            <Link to="/template-builder">
+              <FileText className="mr-2 h-4 w-4" />
+              View Templates
+            </Link>
+          </Button>
+        </div>
       </div>
     </section>
   );
