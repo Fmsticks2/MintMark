@@ -38,6 +38,51 @@ const Analytics = () => {
   const [timeRange, setTimeRange] = useState('30d');
   const [selectedMetric, setSelectedMetric] = useState('certificates');
 
+  const handleExportReport = () => {
+    const reportData = [
+      ['Analytics Report - ' + new Date().toLocaleDateString()],
+      [''],
+      ['Key Metrics'],
+      ['Total Certificates Issued', '2,847'],
+      ['Active Recipients', '1,234'],
+      ['Templates Created', '23'],
+      ['Verification Rate', '98.5%'],
+      [''],
+      ['Certificate Types Distribution'],
+      ['Professional Development', '45%'],
+      ['Technical Skills', '30%'],
+      ['Leadership Training', '15%'],
+      ['Compliance Training', '10%'],
+      [''],
+      ['Top Organizations'],
+      ['TechCorp Solutions', '342 certificates'],
+      ['Innovation Labs', '298 certificates'],
+      ['Digital Dynamics', '267 certificates'],
+      ['Future Systems', '234 certificates'],
+      ['Smart Industries', '198 certificates'],
+      [''],
+      ['Regional Distribution'],
+      ['North America', '45% (1,281 certificates)'],
+      ['Europe', '32% (911 certificates)'],
+      ['Asia Pacific', '18% (512 certificates)'],
+      ['Others', '5% (143 certificates)']
+    ];
+    
+    const csvContent = reportData.map(row => Array.isArray(row) ? row.join(',') : row).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `analytics-report-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   const metrics: MetricCard[] = [
     {
       title: 'Total Certificates Issued',
@@ -141,7 +186,11 @@ const Analytics = () => {
                   <SelectItem value="1y" className="text-white">Last year</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" className="bg-gray-800 text-white border-gray-700">
+              <Button 
+                variant="outline" 
+                className="bg-gray-800 text-white border-gray-700"
+                onClick={handleExportReport}
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Export Report
               </Button>

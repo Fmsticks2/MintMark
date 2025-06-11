@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import Footer from '@/components/Footer';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,15 +15,22 @@ import {
   FileText, 
   Settings, 
   Plus,
-  BarChart3,
+  Download,
+  Users as UsersIcon,
+  Calendar,
   Shield,
-  Download
+  BarChart3,
+  PieChart,
+  Activity
 } from 'lucide-react';
 
 interface DashboardStats {
   totalCertifications: number;
   activeCertifications: number;
   totalRecipients: number;
+  activeRecipients: number;
+  templatesCreated: number;
+  verificationRate: number;
   monthlyGrowth: number;
 }
 
@@ -39,8 +48,55 @@ const OrganizationDashboard = () => {
     totalCertifications: 1247,
     activeCertifications: 23,
     totalRecipients: 892,
+    activeRecipients: 734,
+    templatesCreated: 15,
+    verificationRate: 98.5,
     monthlyGrowth: 12.5
   });
+
+  const handleExportData = () => {
+    const csvData = [
+      ['Metric', 'Value'],
+      ['Total Certifications', stats.totalCertifications],
+      ['Active Recipients', stats.activeRecipients],
+      ['Templates Created', stats.templatesCreated],
+      ['Verification Rate', `${stats.verificationRate}%`],
+      ['Export Date', new Date().toLocaleDateString()]
+    ];
+    
+    const csvContent = csvData.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `organization-data-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handleIssueCertificate = (templateId: string) => {
+    // Generate a unique certificate ID and verification code
+    const certificateId = `CERT-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    const verificationCode = `VER-${Math.random().toString(36).substr(2, 12).toUpperCase()}`;
+    
+    // In a real application, this would interact with blockchain
+    console.log('Issuing certificate:', {
+      templateId,
+      certificateId,
+      verificationCode,
+      issuedAt: new Date().toISOString(),
+      blockchain: 'Ethereum',
+      status: 'issued'
+    });
+    
+    // Show success message or redirect to recipient management
+    alert(`Certificate issued successfully!\nCertificate ID: ${certificateId}\nVerification Code: ${verificationCode}`);
+  };
 
   const [templates] = useState<CertificationTemplate[]>([
     {
@@ -81,7 +137,12 @@ const OrganizationDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-900">
       <Header />
-      <main className="container mx-auto px-4 py-8">
+      <motion.main 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="container mx-auto px-4 py-8 pt-24"
+      >
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
           <div className="flex justify-between items-center mb-8">
@@ -90,7 +151,11 @@ const OrganizationDashboard = () => {
               <p className="text-gray-400">Manage your certification programs and track performance</p>
             </div>
             <div className="flex gap-3">
-              <Button variant="outline" className="bg-gray-800 text-white border-gray-700">
+              <Button 
+                variant="outline" 
+                className="bg-gray-800 text-white border-gray-700"
+                onClick={handleExportData}
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Export Data
               </Button>
@@ -185,8 +250,10 @@ const OrganizationDashboard = () => {
                           <Badge className={`${getStatusColor(template.status)} text-white`}>
                             {template.status}
                           </Badge>
-                          <Button variant="outline" size="sm" className="bg-gray-700 text-white border-gray-600">
-                            Edit
+                          <Button variant="outline" size="sm" className="bg-gray-700 text-white border-gray-600" asChild>
+                            <Link to={`/template-builder?edit=${template.id}`}>
+                              Edit
+                            </Link>
                           </Button>
                         </div>
                       </div>
@@ -206,7 +273,11 @@ const OrganizationDashboard = () => {
                             <Shield className="h-4 w-4 mr-1" />
                             Verify
                           </Button>
-                          <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                          <Button 
+                            size="sm" 
+                            className="bg-green-600 hover:bg-green-700"
+                            onClick={() => handleIssueCertificate(template.id)}
+                          >
                             Issue Certificate
                           </Button>
                         </div>
@@ -260,8 +331,14 @@ const OrganizationDashboard = () => {
                   <CardDescription className="text-gray-400">Latest certificate recipients</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-8 text-gray-400">
-                    Recipients management interface - To be implemented
+                  <div className="text-center py-8">
+                    <p className="text-gray-400 mb-4">Manage your certificate recipients</p>
+                    <Button className="bg-green-600 hover:bg-green-700" asChild>
+                      <Link to="/recipient-management">
+                        <Users className="h-4 w-4 mr-2" />
+                        Manage Recipients
+                      </Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -282,7 +359,7 @@ const OrganizationDashboard = () => {
             </TabsContent>
           </Tabs>
         </div>
-      </main>
+      </motion.main>
       <Footer />
     </div>
   );

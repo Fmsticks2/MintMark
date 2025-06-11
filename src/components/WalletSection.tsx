@@ -4,6 +4,13 @@ import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { useContractService } from '../hooks/useContractService';
 import { toast } from './ui/use-toast';
 
+// Extend Window interface for Petra wallet
+declare global {
+  interface Window {
+    aptos?: any;
+  }
+}
+
 export function WalletSection() {
   const [isMinting, setIsMinting] = useState(false);
   
@@ -16,6 +23,8 @@ export function WalletSection() {
   // Handle Aptos wallet connection
   const handleConnectAptos = async (walletName: string) => {
     try {
+      console.log(`Attempting to connect to ${walletName}...`);
+      
       if (aptosWallet?.name === walletName && isAptosConnected) {
         toast({
           title: 'Already Connected',
@@ -25,19 +34,56 @@ export function WalletSection() {
       }
 
       if (isAptosConnected) {
+        console.log('Disconnecting existing wallet...');
         await disconnectAptos();
       }
 
+      // Check if wallet is installed
+      if (typeof window !== 'undefined' && walletName === 'Petra') {
+        if (!window.aptos) {
+          toast({
+            title: 'Wallet Not Found',
+            description: 'Petra wallet is not installed. Please install it from the Chrome Web Store.',
+            variant: 'destructive',
+          });
+          return;
+        }
+      }
+
+      console.log('Connecting to wallet...');
       await connectAptos(walletName);
-      toast({
-        title: 'Wallet Connected',
-        description: `Connected to ${account?.address}`,
-      });
+      
+      // Wait a moment for connection to establish
+      setTimeout(() => {
+        if (isAptosConnected && account) {
+          toast({
+            title: 'Wallet Connected',
+            description: `Connected to ${account.address}`,
+          });
+        }
+      }, 1000);
+      
     } catch (error) {
       console.error('Connection error:', error);
+      
+      let errorMessage = 'Failed to connect wallet';
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+        
+        // Provide more specific error messages
+        if (error.message.includes('User rejected')) {
+          errorMessage = 'Connection was rejected by user';
+        } else if (error.message.includes('not installed')) {
+          errorMessage = 'Petra wallet is not installed';
+        } else if (error.message.includes('network')) {
+          errorMessage = 'Network connection issue. Please check your internet connection.';
+        }
+      }
+      
       toast({
         title: 'Connection Failed',
-        description: error instanceof Error ? error.message : 'Failed to connect wallet',
+        description: errorMessage,
         variant: 'destructive',
       });
     }
@@ -143,11 +189,10 @@ export function WalletSection() {
             <div className="flex gap-4">
               <Button
                 variant="outline"
-                onClick={() => handleConnectAptos('Martian')}
+                onClick={() => handleConnectAptos('Petra')}
               >
-                Martian Wallet
+                Petra Wallet
               </Button>
-
             </div>
           </div>
           

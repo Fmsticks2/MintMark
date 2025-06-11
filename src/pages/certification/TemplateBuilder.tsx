@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Header } from '@/components/Header';
 import Footer from '@/components/Footer';
-import { useToast, toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -106,6 +107,8 @@ const TemplateBuilder = () => {
     }));
   };
 
+  const { toast } = useToast();
+
   const handleSave = async () => {
     try {
       // Validate template configuration
@@ -147,7 +150,12 @@ const TemplateBuilder = () => {
   return (
     <div className="min-h-screen bg-gray-900">
       <Header />
-      <main className="container mx-auto px-4 py-8">
+      <motion.main 
+        className="container mx-auto px-4 py-8 pt-24"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
@@ -529,7 +537,7 @@ const TemplateBuilder = () => {
             </div>
           </div>
         </div>
-      </main>
+      </motion.main>
       <Footer />
     </div>
   );

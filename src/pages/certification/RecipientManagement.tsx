@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Header } from '@/components/Header';
 import Footer from '@/components/Footer';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -117,6 +118,43 @@ const RecipientManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
+
+  const downloadCertificate = (recipient: Recipient) => {
+    // Generate certificate content
+    const certificateContent = `
+CERTIFICATE OF COMPLETION
+
+This is to certify that
+
+${recipient.name}
+
+has successfully completed the requirements for
+
+${recipient.certificateType}
+
+Issued on: ${recipient.issueDate || 'N/A'}
+Expiration: ${recipient.expirationDate || 'N/A'}
+Verification Code: ${recipient.blockchainTxHash || 'PENDING'}
+
+Organization: ${recipient.organization || 'N/A'}
+Recipient Email: ${recipient.email}
+
+This certificate is blockchain-verified and tamper-proof.
+    `;
+    
+    const blob = new Blob([certificateContent], { type: 'text/plain;charset=utf-8;' });
+    const link = document.createElement('a');
+    
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `certificate-${recipient.name.replace(/\s+/g, '-').toLowerCase()}.txt`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isBulkIssueOpen, setIsBulkIssueOpen] = useState(false);
 
@@ -206,7 +244,12 @@ const RecipientManagement = () => {
   return (
     <div className="min-h-screen bg-gray-900">
       <Header />
-      <main className="container mx-auto px-4 py-8">
+      <motion.main 
+        className="container mx-auto px-4 py-8 pt-24"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
@@ -509,7 +552,10 @@ const RecipientManagement = () => {
                               <Mail className="h-4 w-4 mr-2" />
                               Send Email
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="text-gray-200 hover:bg-gray-600">
+                            <DropdownMenuItem 
+                              className="text-gray-200 hover:bg-gray-600"
+                              onClick={() => downloadCertificate(recipient)}
+                            >
                               <Download className="h-4 w-4 mr-2" />
                               Download PDF
                             </DropdownMenuItem>
@@ -542,7 +588,7 @@ const RecipientManagement = () => {
             </CardContent>
           </Card>
         </div>
-      </main>
+      </motion.main>
       <Footer />
     </div>
   );

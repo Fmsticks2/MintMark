@@ -45,6 +45,13 @@ const ExploreEvents = React.lazy(() =>
   })
 );
 
+const EventDetailsPage = React.lazy(() => 
+  import("./pages/EventDetailsPage").catch(error => {
+    console.error('Failed to load EventDetailsPage:', error);
+    return { default: () => <div className="p-8 text-center text-red-500">Failed to load event details page</div> };
+  })
+);
+
 const OrganizationDashboard = React.lazy(() => 
   import("./pages/dashboard/OrganizationDashboard").catch(error => {
     console.error('Failed to load OrganizationDashboard page:', error);
@@ -132,6 +139,14 @@ const App = () => (
                       element={
                         <ErrorBoundary>
                           <ExploreEvents />
+                        </ErrorBoundary>
+                      } 
+                    />
+                    <Route 
+                      path="/event/:id" 
+                      element={
+                        <ErrorBoundary>
+                          <EventDetailsPage />
                         </ErrorBoundary>
                       } 
                     />
