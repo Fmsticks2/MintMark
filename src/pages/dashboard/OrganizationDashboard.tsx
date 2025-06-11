@@ -94,9 +94,11 @@ const OrganizationDashboard = () => {
                 <Download className="h-4 w-4 mr-2" />
                 Export Data
               </Button>
-              <Button className="bg-green-600 hover:bg-green-700">
-                <Plus className="h-4 w-4 mr-2" />
-                New Template
+              <Button className="bg-green-600 hover:bg-green-700" asChild>
+                <Link to="/template-builder">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Template
+                </Link>
               </Button>
             </div>
           </div>
