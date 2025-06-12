@@ -199,7 +199,7 @@ const CreateEvent = () => {
       // Create event on blockchain first
       const contractService = ContractService.getInstance();
       const eventParams = {
-        creator: account?.address?.toString() || '',  // Fixed: safely access address and provide fallback
+        creator: account?.address ? account.address.toString() : '',  // Ensure address is always converted to string
         name: formData.name,
         organizationType: getOrganizationTypeNumber(formData.organizationType),
         poapEnabled: formData.enablePOAPMinting,
