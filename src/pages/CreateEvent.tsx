@@ -203,7 +203,7 @@ const CreateEvent = () => {
       
       // Create event parameters with proper types
       const eventParams = {
-        creator: creatorAddress,
+        creator: creatorAddress, // Always use string version of address
         name: formData.name,
         organizationType: getOrganizationTypeNumber(formData.organizationType),
         poapEnabled: formData.enablePOAPMinting,
