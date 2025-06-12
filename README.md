@@ -1,73 +1,211 @@
-# Welcome to your Lovable project
+# Mintmark - Decentralized POAP Platform on Aptos
 
-## Project info
+Mintmark is a decentralized Proof of Attendance Protocol (POAP) platform built on the Aptos blockchain. It enables organizations to create events and mint commemorative NFTs for participants.
 
-**URL**: https://lovable.dev/projects/f1ba6838-eb1c-4bb1-abe6-600239ef55bf
+## Project Structure
 
-## How can I edit this code?
+This project is structured as a monorepo with separate frontend and backend components for independent deployment:
 
-There are several ways of editing your application.
+```
+mintmark/
+├── frontend/              # React frontend application
+│   ├── src/              # React source code
+│   ├── public/           # Static assets
+│   ├── package.json      # Frontend dependencies
+│   └── README.md         # Frontend documentation
+├── backend/              # Smart contract backend
+│   ├── move/            # Move smart contract
+│   ├── package.json     # Backend scripts
+│   └── README.md        # Backend documentation
+├── .env                 # Root environment variables
+└── README.md           # This file
+```
 
-**Use Lovable**
+## Quick Start
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f1ba6838-eb1c-4bb1-abe6-600239ef55bf) and start prompting.
+### Prerequisites
+- Node.js 18+
+- [Aptos CLI](https://aptos.dev/tools/aptos-cli/install-cli/)
+- Git
 
-Changes made via Lovable will be committed automatically to this repo.
+### 1. Clone Repository
+```bash
+git clone <repository-url>
+cd mintmark
+```
 
-**Use your preferred IDE**
+### 2. Setup Backend (Smart Contract)
+```bash
+cd backend
+npm install
+npm run init:devnet
+npm run fund:devnet
+npm run compile
+npm run deploy:devnet
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### 3. Setup Frontend
+```bash
+cd ../frontend
+npm install
+# Update .env with deployed contract address
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Architecture Overview
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Frontend (React Application)
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Blockchain**: Aptos TypeScript SDK
+- **Wallet**: Multi-wallet adapter support
 
-**Use GitHub Codespaces**
+### Backend (Smart Contract)
+- **Language**: Move
+- **Blockchain**: Aptos
+- **Features**: POAP minting, event management, organization registry
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Features
 
-## What technologies are used for this project?
+### Core Functionality
+- 🎫 **Event Creation**: Organizations can create events with custom metadata
+- 🏆 **POAP Minting**: Participants receive commemorative NFTs
+- 👥 **Organization Management**: Register and manage organizations
+- 💰 **GUI Token Integration**: Platform token for fees and governance
+- 📊 **Analytics Dashboard**: Track event metrics and participation
 
-This project is built with:
+### Technical Features
+- 🔐 **Multi-Wallet Support**: Petra, Martian, Pontem, Fewcha
+- 🌐 **Multi-Network**: Devnet, Testnet, Mainnet support
+- 📱 **Responsive Design**: Mobile-first approach
+- ⚡ **Fast Performance**: Optimized with Vite and modern React
+- 🛡️ **Type Safety**: Full TypeScript implementation
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Development Workflow
 
-## How can I deploy this project?
+### Backend Development
+1. Navigate to `backend/` directory
+2. Modify Move contracts in `move/sources/`
+3. Compile: `npm run compile`
+4. Test: `npm run test`
+5. Deploy: `npm run deploy:devnet`
 
-Simply open [Lovable](https://lovable.dev/projects/f1ba6838-eb1c-4bb1-abe6-600239ef55bf) and click on Share -> Publish.
+### Frontend Development
+1. Navigate to `frontend/` directory
+2. Start dev server: `npm run dev`
+3. Make changes to React components
+4. Build: `npm run build`
 
-## Can I connect a custom domain to my Lovable project?
+## Deployment
 
-Yes, you can!
+### Backend Deployment
+The smart contract can be deployed to different networks:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```bash
+cd backend
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+# Deploy to Devnet
+npm run deploy:devnet
+
+# Deploy to Testnet
+npm run deploy:testnet
+
+# Deploy to Mainnet
+npm run deploy:mainnet
+```
+
+### Frontend Deployment
+The frontend can be deployed to various platforms:
+
+#### Vercel
+```bash
+cd frontend
+npm run build
+vercel --prod
+```
+
+#### Netlify
+```bash
+cd frontend
+npm run build
+# Upload dist/ folder to Netlify
+```
+
+#### Traditional Hosting
+```bash
+cd frontend
+npm run build
+# Upload dist/ folder to your hosting provider
+```
+
+## Environment Configuration
+
+### Backend (.env)
+```env
+APTOS_NETWORK=devnet
+CONTRAT_ADDRESS=0x...
+MODULE_NAME=platform
+```
+
+### Frontend (.env)
+```env
+VITE_APTOS_NETWORK=devnet
+VITE_CONTRACT_ADDRESS=0x...
+VITE_MODULE_NAME=platform
+```
+
+## Smart Contract Functions
+
+### Platform Management
+- `initialize_platform()` - Initialize platform configuration
+- `initialize_event_pricing()` - Set event pricing structure
+- `get_platform_config()` - Retrieve platform settings
+
+### Organization Functions
+- `register_organization()` - Register new organization
+- `create_event()` - Create event with metadata
+
+### POAP Functions
+- `mint_poap()` - Mint POAP for participant
+- `add_participant()` - Add participant to event
+- `get_event()` - Retrieve event information
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+### Development Guidelines
+- Follow TypeScript best practices
+- Write comprehensive tests
+- Use conventional commit messages
+- Update documentation as needed
+
+## Security
+
+- Smart contracts are audited for security vulnerabilities
+- Private keys should never be committed to version control
+- Use environment variables for sensitive configuration
+- Follow Aptos security best practices
+
+## Support
+
+- [Documentation](./docs/)
+- [API Reference](./docs/api.md)
+- [Troubleshooting](./docs/troubleshooting.md)
+- [Discord Community](https://discord.gg/mintmark)
+
+## License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Built on [Aptos](https://aptos.dev/) blockchain
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- Styled with [Tailwind CSS](https://tailwindcss.com/)
+- Powered by [React](https://react.dev/) and [Vite](https://vitejs.dev/)

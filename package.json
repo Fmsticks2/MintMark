@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@aptos-connect/wallet-adapter-plugin": "^2.4.3",
+    "@aptos-labs/ts-sdk": "^2.0.1",
     "@aptos-labs/wallet-adapter-react": "6.1.0",
     "@aptos-labs/wallet-standard": "^0.4.0",
     "@hookform/resolvers": "^3.9.0",

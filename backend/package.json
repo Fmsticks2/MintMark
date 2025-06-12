@@ -1,0 +1,44 @@
+{
+  "name": "mintmark-backend",
+  "version": "1.0.0",
+  "description": "Mintmark smart contract backend with Move and deployment scripts",
+  "main": "index.js",
+  "scripts": {
+    "compile": "cd move && aptos move compile",
+    "test": "cd move && aptos move test",
+    "deploy:devnet": "cd move && aptos move publish --profile devnet",
+    "deploy:testnet": "cd move && aptos move publish --profile testnet",
+    "deploy:mainnet": "cd move && aptos move publish --profile mainnet",
+    "clean": "cd move && aptos move clean",
+    "fund:devnet": "aptos account fund-with-faucet --profile devnet",
+    "fund:testnet": "aptos account fund-with-faucet --profile testnet",
+    "init:devnet": "aptos init --profile devnet --network devnet",
+    "init:testnet": "aptos init --profile testnet --network testnet",
+    "init:mainnet": "aptos init --profile mainnet --network mainnet",
+    "build:docs": "aptos move document --output-directory docs",
+    "verify": "cd move && aptos move verify",
+    "coverage": "cd move && aptos move coverage"
+  },
+  "keywords": [
+    "aptos",
+    "move",
+    "smart-contract",
+    "blockchain",
+    "mintmark",
+    "poap"
+  ],
+  "author": "Mintmark Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "@aptos-labs/ts-sdk": "^1.33.1",
+    "dotenv": "^16.3.1",
+    "ts-node": "^10.9.1",
+    "@types/chai": "^4.3.5",
+    "chai": "^4.3.7"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
