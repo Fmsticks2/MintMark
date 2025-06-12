@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 // Define WalletName type locally since it's no longer exported from wallet-adapter-react v6.1.0
 type WalletName = string;
+import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { useContractService } from '../hooks/useContractService';
 import { toast } from './ui/use-toast';
 

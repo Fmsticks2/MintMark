@@ -198,8 +198,12 @@ const CreateEvent = () => {
 
       // Create event on blockchain first
       const contractService = ContractService.getInstance();
+      // Ensure we have a valid creator address as string
+      const creatorAddress = account?.address ? account.address.toString() : '';
+      
+      // Create event parameters with proper types
       const eventParams = {
-        creator: account?.address ? account.address.toString() : '',  // Ensure address is always converted to string
+        creator: creatorAddress,
         name: formData.name,
         organizationType: getOrganizationTypeNumber(formData.organizationType),
         poapEnabled: formData.enablePOAPMinting,
