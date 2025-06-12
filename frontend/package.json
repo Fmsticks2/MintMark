@@ -15,7 +15,7 @@
     "@aptos-labs/wallet-adapter-ant-design": "^3.0.7",
     "@aptos-labs/wallet-adapter-core": "^4.17.0",
     "@aptos-labs/wallet-adapter-react": "6.1.0",
-    "@martianwallet/aptos-wallet-adapter": "^0.1.5",
+    "@martianwallet/aptos-wallet-adapter": "^0.0.5",
     "@tanstack/react-query": "^5.28.4",
     "@hookform/resolvers": "3.10.0",
     "@radix-ui/react-accordion": "1.2.2",
