@@ -86,6 +86,19 @@ This document provides instructions for deploying the Mintmark application to va
 
 ## Important Notes
 
+### Dependency Resolution
+
+To resolve the version conflict between `@aptos-labs/ts-sdk` and `@aptos-labs/wallet-adapter-core`, we've standardized on using `@aptos-labs/ts-sdk@1.33.1` across the project. This ensures compatibility with `@aptos-labs/wallet-adapter-core` which requires `ts-sdk@^1.33.1`.
+
+If you need to use features from `@aptos-labs/ts-sdk@2.0.1` in the future, you have two options:
+
+1. Use the `--legacy-peer-deps` flag during installation:
+   ```bash
+   npm install --legacy-peer-deps
+   ```
+
+2. Wait for `@aptos-labs/wallet-adapter-core` to be updated to support the newer version of the SDK.
+
 ### Private Keys
 
 Never commit private keys to your repository. Always use environment variables for sensitive information.
