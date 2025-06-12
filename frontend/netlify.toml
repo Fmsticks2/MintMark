@@ -1,0 +1,21 @@
+[build]
+  base = "frontend/"
+  publish = "dist"
+  command = "npm run build"
+
+# Handle SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment variables will be set in the Netlify UI
+# or via netlify.toml environment variables section
+[build.environment]
+  NODE_VERSION = "18"
+
+# For local development
+[dev]
+  command = "npm run dev"
+  port = 8080
+  publish = "dist"

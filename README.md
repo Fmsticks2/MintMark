@@ -15,9 +15,12 @@ mintmark/
 │   └── README.md         # Frontend documentation
 ├── backend/              # Smart contract backend
 │   ├── move/            # Move smart contract
+│   ├── server.js        # Express API server
 │   ├── package.json     # Backend scripts
 │   └── README.md        # Backend documentation
 ├── .env                 # Root environment variables
+├── DEPLOYMENT.md        # Detailed deployment instructions
+├── render.yaml          # Render deployment configuration
 └── README.md           # This file
 ```
 
@@ -52,6 +55,12 @@ npm install
 npm run dev
 ```
 
+### 4. Start Backend API Server
+```bash
+cd ../backend
+npm run dev
+```
+
 ## Architecture Overview
 
 ### Frontend (React Application)
@@ -61,9 +70,9 @@ npm run dev
 - **Blockchain**: Aptos TypeScript SDK
 - **Wallet**: Multi-wallet adapter support
 
-### Backend (Smart Contract)
-- **Language**: Move
-- **Blockchain**: Aptos
+### Backend (Smart Contract & API)
+- **Smart Contract**: Move language on Aptos
+- **API Server**: Express.js
 - **Features**: POAP minting, event management, organization registry
 
 ## Features
@@ -90,6 +99,7 @@ npm run dev
 3. Compile: `npm run compile`
 4. Test: `npm run test`
 5. Deploy: `npm run deploy:devnet`
+6. Start API server: `npm run dev`
 
 ### Frontend Development
 1. Navigate to `frontend/` directory
@@ -99,60 +109,37 @@ npm run dev
 
 ## Deployment
 
-### Backend Deployment
-The smart contract can be deployed to different networks:
+Detailed deployment instructions are available in [DEPLOYMENT.md](./DEPLOYMENT.md).
 
-```bash
-cd backend
+### Backend Deployment Options
 
-# Deploy to Devnet
-npm run deploy:devnet
+- **Render**: Configured with `render.yaml`
+- **Custom Server**: Deploy the Express API server
 
-# Deploy to Testnet
-npm run deploy:testnet
+### Frontend Deployment Options
 
-# Deploy to Mainnet
-npm run deploy:mainnet
-```
+- **Render**: Configured with `render.yaml`
+- **Vercel**: Configured with `frontend/vercel.json`
+- **Netlify**: Configured with `frontend/netlify.toml`
 
-### Frontend Deployment
-The frontend can be deployed to various platforms:
+### Environment Configuration
 
-#### Vercel
-```bash
-cd frontend
-npm run build
-vercel --prod
-```
-
-#### Netlify
-```bash
-cd frontend
-npm run build
-# Upload dist/ folder to Netlify
-```
-
-#### Traditional Hosting
-```bash
-cd frontend
-npm run build
-# Upload dist/ folder to your hosting provider
-```
-
-## Environment Configuration
-
-### Backend (.env)
+#### Backend (.env)
 ```env
 APTOS_NETWORK=devnet
-CONTRAT_ADDRESS=0x...
+APTOS_NODE_URL=https://fullnode.devnet.aptoslabs.com/v1
+CONTRACT_ADDRESS=0x...
 MODULE_NAME=platform
+DEVNET_PRIVATE_KEY=0x...
 ```
 
-### Frontend (.env)
+#### Frontend (.env)
 ```env
 VITE_APTOS_NETWORK=devnet
+VITE_APTOS_NODE_URL=https://fullnode.devnet.aptoslabs.com/v1
 VITE_CONTRACT_ADDRESS=0x...
 VITE_MODULE_NAME=platform
+VITE_API_URL=http://localhost:3000
 ```
 
 ## Smart Contract Functions
