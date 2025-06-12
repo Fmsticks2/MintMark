@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { enhancedIagonStorage, type EventData } from '@/services/IagonStorageService';
 import { ContractService } from '@/blockchain/ContractService';
 import { OrganizationType } from '@/blockchain/types';
+import { useWallet } from '@aptos-labs/wallet-adapter-react'; // Add wallet adapter import
 
 interface EventFormData {
   name: string;
@@ -43,6 +44,7 @@ const getOrganizationTypeNumber = (type: string): number => {
 const CreateEvent = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { account } = useWallet(); // Add wallet hook to get account
   const [date, setDate] = useState<Date>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -197,6 +199,7 @@ const CreateEvent = () => {
       // Create event on blockchain first
       const contractService = ContractService.getInstance();
       const eventParams = {
+        creator: account?.address?.toString() || '',  // Fixed: safely access address and provide fallback
         name: formData.name,
         organizationType: getOrganizationTypeNumber(formData.organizationType),
         poapEnabled: formData.enablePOAPMinting,

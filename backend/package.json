@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "mintmark-backend",
   "version": "1.0.0",
   "description": "Mintmark smart contract backend with Move and deployment scripts",

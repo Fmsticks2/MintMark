@@ -12,6 +12,9 @@ import {
   PLATFORM_CONFIG
 } from './config';
 
+// Re-export types from types.ts to fix import errors
+export type { EventParams, POAPParams } from './types';
+
 export interface ContractTransactionResult extends TransactionResult {
   data?: Record<string, unknown>;
 }

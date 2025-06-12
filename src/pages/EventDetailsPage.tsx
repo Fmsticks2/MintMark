@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { MapPinIcon, Calendar, Users, Clock, ArrowLeft, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
+import { ContractService } from '@/blockchain/ContractService';
 
 interface Event {
   id: number;
@@ -296,15 +297,15 @@ const EventDetailsPage = () => {
     setIsSubmitting(true);
     
     try {
-      // Use the updated POAP minting interface
-      const { mintPOAP } = useContractService();
+      // Get the mintPOAP function from the contract service
+      const contractService = ContractService.getInstance();
       const poapParams = {
         participant: account.address.toString(),
         eventId: parseInt(id!),
         eventCreator: event.organizer || account.address.toString() // Use event organizer or current user
       };
       
-      const result = await mintPOAP(poapParams);
+      const result = await contractService.mintPOAP(poapParams);
       
       if (!result.success) {
         throw new Error(result.error || 'Failed to mint POAP');
