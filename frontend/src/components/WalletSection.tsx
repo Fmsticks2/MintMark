@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
+import { useWallet, WalletName } from '@aptos-labs/wallet-adapter-react';
 import { useContractService } from '../hooks/useContractService';
 import { toast } from './ui/use-toast';
 
@@ -112,7 +112,7 @@ export function WalletSection() {
       }
 
       console.log('Connecting to wallet...');
-      await connectAptos(walletName);
+      await connectAptos(walletName as WalletName<typeof walletName>);
       
       // Wait a moment for connection to establish
       setTimeout(() => {

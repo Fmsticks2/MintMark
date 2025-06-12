@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { MapPinIcon, Calendar, Users, Clock, ArrowLeft, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
+import { useContractService } from '../hooks/useContractService';
 
 interface Event {
   id: number;

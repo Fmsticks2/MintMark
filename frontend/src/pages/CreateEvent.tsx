@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
-import { format } from 'date-fns';
+import { format } from 'date-fns/format';
 import { CalendarIcon, MapPinIcon, ImageIcon, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { enhancedIagonStorage, type EventData } from '@/services/IagonStorageService';
 import { ContractService } from '@/blockchain/ContractService';
 import { OrganizationType } from '@/blockchain/types';
+import { useWallet } from '@aptos-labs/wallet-adapter-react';
 
 interface EventFormData {
   name: string;
@@ -43,6 +44,7 @@ const getOrganizationTypeNumber = (type: string): number => {
 const CreateEvent = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { account } = useWallet(); // Add wallet hook to get account
   const [date, setDate] = useState<Date>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -201,7 +203,8 @@ const CreateEvent = () => {
         organizationType: getOrganizationTypeNumber(formData.organizationType),
         poapEnabled: formData.enablePOAPMinting,
         maxAttendees: formData.maxAttendees,
-        eventDate: Math.floor(date.getTime() / 1000) // Convert to Unix timestamp
+        eventDate: date ? Math.floor(date.getTime() / 1000) : 0, // Convert to Unix timestamp
+        creator: account?.address || '', // Use Aptos account address instead of Ethereum
       };
 
       const contractResult = await contractService.createEvent(eventParams);

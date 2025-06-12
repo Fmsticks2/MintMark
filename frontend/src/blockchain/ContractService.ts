@@ -1,6 +1,8 @@
 // Types import removed - using newer @aptos-labs/ts-sdk structure
 import { WalletManager } from './wallet';
 import { ChainType, TransactionResult, TokenInfo, TokenBalance, EventParams, POAPParams } from './types';
+// Add this line to re-export the types
+export type { EventParams, POAPParams };
 import {
   CONTRACT_ADDRESS,
   MODULE_NAME,
