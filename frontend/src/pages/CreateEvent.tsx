@@ -204,7 +204,7 @@ const CreateEvent = () => {
         poapEnabled: formData.enablePOAPMinting,
         maxAttendees: formData.maxAttendees,
         eventDate: date ? Math.floor(date.getTime() / 1000) : 0, // Convert to Unix timestamp
-        creator: account?.address || '', // Use Aptos account address instead of Ethereum
+        creator: account?.address ? String(account.address) : '', // Explicitly convert to string
       };
 
       const contractResult = await contractService.createEvent(eventParams);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
-import { useWallet, WalletName } from '@aptos-labs/wallet-adapter-react';
+import { useWallet } from '@aptos-labs/wallet-adapter-react';
+import { WalletName } from '@aptos-labs/wallet-adapter-core';
 import { useContractService } from '../hooks/useContractService';
 import { toast } from './ui/use-toast';
 
