@@ -1,3 +1,22 @@
+# Dependencies
 node_modules/
+
+# Build outputs
 dist/
+
+# Environment variables
 .env
+frontend/.env
+backend/.env
+
+# Local development files
+.env.local
+frontend/.env.local
+backend/.env.local
+
+# Other environment files
+.env.development
+.env.test
+.env.production
+frontend/.env.*
+backend/.env.*
